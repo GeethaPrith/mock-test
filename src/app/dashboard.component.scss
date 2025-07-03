@@ -1,0 +1,124 @@
+.dashboard-layout {
+  height: 100vh;
+  background: #e9eef6;
+}
+
+.sidenav-container {
+  height: 100vh;
+  box-shadow: 0 2px 12px rgba(63,81,181,0.08);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.sidenav {
+  width: 220px;
+  background: #f5f7fa;
+  border-right: 1px solid #e0e0e0;
+  padding-top: 0;
+  box-shadow: 2px 0 8px rgba(63,81,181,0.04);
+}
+
+mat-toolbar {
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+  background: #3f51b5 !important;
+  color: #fff !important;
+  border-radius: 0 0 12px 12px;
+}
+
+mat-nav-list {
+  padding: 0;
+}
+
+button[mat-list-item] {
+  width: 100%;
+  text-align: left;
+  font-size: 1rem;
+  border-radius: 6px;
+  margin-bottom: 0.25rem;
+  transition: background 0.2s, color 0.2s;
+  color: #333;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+button[mat-list-item].active-link,
+button[mat-list-item]:hover {
+  background: #e3eafc !important;
+  color: #3f51b5 !important;
+  font-weight: 600;
+}
+
+.dashboard-content {
+  padding: 2.5rem 3rem;
+  background: #fff;
+  min-height: 100vh;
+  border-radius: 0 16px 16px 0;
+  box-shadow: 0 2px 12px rgba(63,81,181,0.06);
+}
+
+@media (max-width: 900px) {
+  .dashboard-layout,
+  .sidenav-container {
+    height: auto;
+    min-height: 100vh;
+  }
+  .dashboard-content {
+    padding: 1rem;
+    border-radius: 0;
+  }
+  .sidenav {
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+.dashboard-layout {
+  height: 100vh;
+}
+
+.sidenav-container {
+  height: 100vh;
+}
+
+.sidenav {
+  width: 220px;
+  background: #f5f7fa;
+  border-right: 1px solid #e0e0e0;
+  padding-top: 0;
+}
+
+mat-toolbar {
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+}
+
+mat-nav-list {
+  padding: 0;
+}
+
+button[mat-list-item] {
+  width: 100%;
+  text-align: left;
+  font-size: 1rem;
+  border-radius: 6px;
+  margin-bottom: 0.25rem;
+  transition: background 0.2s;
+}
+
+button[mat-list-item].active-link,
+button[mat-list-item]:hover {
+  background: #e3eafc !important;
+  color: #3f51b5 !important;
+}
+
+.dashboard-content {
+  padding: 2rem 2.5rem;
+  background: #fff;
+  min-height: 100vh;
+}

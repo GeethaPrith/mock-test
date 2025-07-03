@@ -1,0 +1,30 @@
+<div class="container mt-4">
+  <h2>Test Result</h2>
+  <mat-card>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Section</th>
+          <th>No. of Questions</th>
+          <th>Answered</th>
+          <th>Not Answered</th>
+          <th>Marked for Review</th>
+          <th>Not Visited</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stat of sectionStats">
+          <td>{{ stat.section }}</td>
+          <td>{{ stat.total }}</td>
+          <td>{{ stat.answered }}</td>
+          <td>{{ stat.notAnswered }}</td>
+          <td>{{ stat.marked }}</td>
+          <td>{{ stat.notVisited }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card>
+</div>
+<div *ngIf="!test || !test.length">
+  <h2>No test result to display.</h2>
+</div>

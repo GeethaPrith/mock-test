@@ -31,8 +31,10 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
+            "styles": [ 
+                "node_modules/bootstrap/dist/css/bootstrap.min.css",
+                "node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+                "src/styles.scss"
             ],
             "scripts": []
           },
@@ -98,5 +100,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "77383315-6be5-4663-8ce7-cb2437632f11"
   }
 }

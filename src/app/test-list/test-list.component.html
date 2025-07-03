@@ -1,0 +1,18 @@
+<div class="container">
+  <h2 class="mb-4">Available Mock Tests</h2>
+  <ng-container *ngIf="tests && tests.length; else noTests">
+    <mat-card *ngFor="let test of tests">
+      <mat-card-title>{{ test.title }}</mat-card-title>
+      <mat-card-subtitle>Duration: {{ test.duration / 60 }} mins</mat-card-subtitle>
+      <mat-card-content>
+        <p>{{ test.instructions }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-flat-button color="primary" (click)="startTest(test.id)">Read Instructions</button>
+      </mat-card-actions>
+    </mat-card>
+  </ng-container>
+  <ng-template #noTests>
+    <p>No tests available.</p>
+  </ng-template>
+</div>

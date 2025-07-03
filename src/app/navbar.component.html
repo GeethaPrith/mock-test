@@ -1,0 +1,6 @@
+<mat-toolbar color="primary">
+  <span class="app-title" routerLink="/">Mock Test App</span>
+  <span class="spacer"></span>
+  <a mat-button routerLink="/login" *ngIf="!auth.isLoggedIn()">Login</a>
+  <button mat-button (click)="logout()" *ngIf="auth.isLoggedIn()">Logout</button>
+</mat-toolbar>

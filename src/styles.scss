@@ -1,1 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+}
+
+.container {
+  max-width: 1140px;
+  margin: auto;
+  padding: 1rem;
+}
+
+mat-card {
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+.btn-sm {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.875rem;
+  border-radius: 0.3rem;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

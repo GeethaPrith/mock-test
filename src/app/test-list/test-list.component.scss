@@ -1,0 +1,45 @@
+h2 {
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: #3f51b5;
+  text-align: center;
+}
+
+mat-card {
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(63,81,181,0.08), 0 1.5px 4px rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  background: #fff;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+mat-card-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #222;
+  margin-bottom: 0.5rem;
+}
+
+mat-card-subtitle {
+  color: #757575;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+mat-card-content p {
+  margin: 0 0 1rem 0;
+  color: #444;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+button[mat-flat-button] {
+  min-width: 120px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}

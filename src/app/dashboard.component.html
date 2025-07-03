@@ -1,0 +1,19 @@
+<div class="dashboard-layout">
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav mode="side" opened class="sidenav">
+      <mat-toolbar color="primary">Dashboard</mat-toolbar>
+      <mat-nav-list>
+        <button mat-list-item (click)="onNavClick('test-list')" routerLink="test-list" routerLinkActive="active-link">Test List</button>
+        <button mat-list-item (click)="onNavClick('test-instruction')" routerLink="test-instruction" routerLinkActive="active-link">Test Instructions</button>
+        <button mat-list-item (click)="onNavClick('test-live')" routerLink="test-live" routerLinkActive="active-link">Live Test</button>
+        <button mat-list-item (click)="onNavClick('test-result')" routerLink="test-result" routerLinkActive="active-link">Test Result</button>
+        <button mat-list-item (click)="onLogout()">Logout</button>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div class="dashboard-content">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
