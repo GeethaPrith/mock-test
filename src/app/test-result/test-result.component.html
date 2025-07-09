@@ -1,6 +1,9 @@
 <div class="container mt-4">
   <h2>Test Result</h2>
   <mat-card>
+    <div class="mb-3">
+      <strong>Score: </strong> {{ score }} / {{ total }}
+    </div>
     <table class="table table-bordered">
       <thead>
         <tr>
@@ -23,7 +26,10 @@
         </tr>
       </tbody>
     </table>
+    <button mat-raised-button color="primary" (click)="goToReview()">Show Answers</button>
   </mat-card>
+
+
 </div>
 <div *ngIf="!test || !test.length">
   <h2>No test result to display.</h2>
