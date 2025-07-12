@@ -1,4 +1,3 @@
-// Section navigation state
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TestService } from '../test.service';
@@ -31,43 +30,80 @@ export class TestLiveComponent {
     private testService: TestService
   ) {}
 
+  onAnswerChange(): void {
+    if (this.visited && this.visited[this.currentSectionIndex]) {
+      this.visited[this.currentSectionIndex][this.currentQuestionIndex] = true;
+    }
+    this.saveProgressToLocalStorage();
+  }
+
+// Place this method inside the TestLiveComponent class
+
+  resetAllAnswers(): void {
+    if (!this.test || !this.test.length) return;
+    this.answers = this.test.map((section: any) => Array(section.questions.length).fill(''));
+    this.marked = this.test.map((section: any) => Array(section.questions.length).fill(false));
+    this.visited = this.test.map((section: any) => Array(section.questions.length).fill(false));
+    this.currentSectionIndex = 0;
+    this.currentQuestionIndex = 0;
+    // Remove progress from localStorage if available
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.removeItem(this.LOCAL_STORAGE_KEY);
+      window.localStorage.removeItem('reviewModeData');
+    }
+  }
+
   ngOnInit(): void {
     const testId = this.route.snapshot.paramMap.get('id');
-    const nav = this.router.getCurrentNavigation();
-    const state = nav?.extras.state as any;
-
-    if (state?.reviewMode) {
+    let nav = this.router.getCurrentNavigation();
+    let state = nav?.extras.state as any;
+    // Always clear progress and review data before starting a new test
+    // if (window && window.localStorage) {
+    //   localStorage.removeItem('reviewModeData');
+    //   localStorage.removeItem(this.LOCAL_STORAGE_KEY);
+    // }
+    // Fallback to localStorage for review mode (in case of reload)
+    if (!state && window && window.localStorage) {
+      try {
+        const reviewData = JSON.parse(localStorage.getItem('reviewModeData') || 'null');
+        if (reviewData && reviewData.reviewMode) {
+          state = reviewData;
+        }
+      } catch {}
+    }
+    if (state && state.reviewMode) {
       this.reviewMode = true;
       this.test = state.test;
       this.answers = state.answers;
+      // Save to localStorage for reloads
+      if (window && window.localStorage) {
+        localStorage.setItem('reviewModeData', JSON.stringify(state));
+      }
     } else {
       if (!testId) return;
-
+      // Always load all sections for the test UI
       this.test = this.testService.tests;
-
-      const saved = localStorage.getItem(this.LOCAL_STORAGE_KEY);
-      if (saved) {
-        const data = JSON.parse(saved);
-        this.answers = data.answers;
-        this.visited = data.visited;
-        this.marked = data.marked;
-        this.currentSectionIndex = data.currentSectionIndex;
-        this.currentQuestionIndex = data.currentQuestionIndex;
-        this.timer = data.timer;
-      } else {
-        this.answers = this.test.map((s: any) => Array(s.questions.length).fill(null));
-        this.marked = this.test.map((s: any) => Array(s.questions.length).fill(false));
-        this.visited = this.test.map((s: any) => Array(s.questions.length).fill(false));
-        this.timer = this.test[0]?.duration || 0;
-      }
-
+      this.answers = this.test.map((section: any) => Array(section.questions.length).fill(null));
+      this.marked = this.test.map((section: any) => Array(section.questions.length).fill(false));
+      this.visited = this.test.map((section: any) => Array(section.questions.length).fill(false));
+      this.timer = this.test[0]?.duration || 0;
       this.interval = setInterval(() => {
         this.timer--;
         if (this.timer <= 0) {
           this.submit();
         }
-        this.saveProgressToLocalStorage(); // auto-save on countdown
       }, 1000);
+      // Save initial state to localStorage
+      if (window && window.localStorage) {
+        localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify({
+          answers: this.answers,
+          visited: this.visited,
+          marked: this.marked,
+          currentSectionIndex: this.currentSectionIndex,
+          currentQuestionIndex: this.currentQuestionIndex,
+          timer: this.timer
+        }));
+      }
     }
   }
 
@@ -147,12 +183,10 @@ export class TestLiveComponent {
 
   submit(): void {
     clearInterval(this.interval);
-    localStorage.removeItem(this.LOCAL_STORAGE_KEY); // clear saved progress on submit
-
+    // Prepare stats for each section
     const sectionStats = this.test.map((section, sIdx) => {
       const total = section.questions.length;
       let answered = 0, notAnswered = 0, marked = 0, notVisited = 0;
-
       for (let i = 0; i < total; i++) {
         const ans = this.answers[sIdx][i];
         if (ans && ans !== '') answered++;
@@ -160,7 +194,6 @@ export class TestLiveComponent {
         if (this.marked[sIdx][i]) marked++;
         if (!this.visited[sIdx][i]) notVisited++;
       }
-
       return {
         section: section.title,
         total,
@@ -170,7 +203,14 @@ export class TestLiveComponent {
         notVisited
       };
     });
-
+    // Save answers and test to localStorage for review mode
+    if (window && window.localStorage) {
+      localStorage.setItem('reviewModeData', JSON.stringify({
+        reviewMode: true,
+        test: this.test,
+        answers: this.answers
+      }));
+    }
     this.router.navigate(['/test-result'], {
       state: {
         test: this.test,
@@ -181,142 +221,3 @@ export class TestLiveComponent {
   }
 }
 
-  // Helper for nav status in template
-//   getNavStatus(sectionIdx: number, qIdx: number): string {
-//     if (!this.visited || !this.visited[sectionIdx] || !this.visited[sectionIdx][qIdx]) return 'not-visited';
-//     if (this.marked && this.marked[sectionIdx] && this.marked[sectionIdx][qIdx] && this.answers && this.answers[sectionIdx] && this.answers[sectionIdx][qIdx]) return 'marked-answered';
-//     if (this.marked && this.marked[sectionIdx] && this.marked[sectionIdx][qIdx]) return 'marked';
-//     if (this.answers && this.answers[sectionIdx] && this.answers[sectionIdx][qIdx]) return 'answered';
-//     return 'not-answered';
-//   }
-//   submitSection() {
-//     if (this.currentSectionIndex < this.test.length - 1) {
-//       this.currentSectionIndex++;
-//       this.currentQuestionIndex = 0;
-//     } else {
-//       alert('You have completed all sections. Please click Submit Test to finish.');
-//     }
-//   }
-//   public currentSectionIndex = 0;
-//   public currentQuestionIndex = 0;
-
-//   public switchSection(index: number): void {
-//     this.currentSectionIndex = index;
-//     this.currentQuestionIndex = 0;
-//   }
-
-//   // ...existing code...
-//   // Remove submitSection for previous version
-//   test: any[] = [];
-//   answers: string[][] = [];
-//   marked: boolean[][] = [];
-//   visited: boolean[][] = [];
-//   timer: number = 0;
-//   interval: any;
-//   reviewMode: boolean = false;
-
-//   constructor(private route: ActivatedRoute, private router: Router, private testService: TestService) {}
-
-//   ngOnInit(): void {
-//     const testId = this.route.snapshot.paramMap.get('id');
-//     const nav = this.router.getCurrentNavigation();
-//     const state = nav?.extras.state as any;
-//     if (state && state.reviewMode) {
-//       this.reviewMode = true;
-//       this.test = state.test;
-//       this.answers = state.answers;
-//       // Optionally, you can also set marked/visited if you want to show them in review
-//     } else {
-//       if (!testId) return;
-//       // Always load all sections for the test UI
-//       this.test = this.testService.tests;
-//       this.answers = this.test.map((section: any) => Array(section.questions.length).fill(null));
-//       this.marked = this.test.map((section: any) => Array(section.questions.length).fill(false));
-//       this.visited = this.test.map((section: any) => Array(section.questions.length).fill(false));
-//       this.timer = this.test[0]?.duration || 0;
-//       this.interval = setInterval(() => {
-//         this.timer--;
-//         if (this.timer <= 0) {
-//           this.submit();
-//         }
-//       }, 1000);
-//     }
-//   }
-
-//   navigate(index: number) {
-//     this.currentQuestionIndex = index;
-//     this.visited[this.currentSectionIndex][index] = true;
-//   }
-
-//   markForReviewAndNext() {
-//     this.marked[this.currentSectionIndex][this.currentQuestionIndex] = true;
-//     this.visited[this.currentSectionIndex][this.currentQuestionIndex] = true;
-//     if (this.test && this.test[this.currentSectionIndex] && this.currentQuestionIndex < this.test[this.currentSectionIndex].questions.length - 1) {
-//       this.currentQuestionIndex++;
-//       this.visited[this.currentSectionIndex][this.currentQuestionIndex] = true;
-//     }
-//   }
-
-//   clearResponse() {
-//     this.answers[this.currentSectionIndex][this.currentQuestionIndex] = '';
-//     this.marked[this.currentSectionIndex][this.currentQuestionIndex] = false;
-//     this.visited[this.currentSectionIndex][this.currentQuestionIndex] = true;
-//   }
-
-//   saveAndNext() {
-//     // Optionally, you could add logic to save the answer to a backend here
-//     // For now, just move to the next question
-//     this.visited[this.currentSectionIndex][this.currentQuestionIndex] = true;
-//     if (this.test && this.test[this.currentSectionIndex] && this.currentQuestionIndex < this.test[this.currentSectionIndex].questions.length - 1) {
-//       this.currentQuestionIndex++;
-//       this.visited[this.currentSectionIndex][this.currentQuestionIndex] = true;
-//     }
-//   }
-
-//   get totalQuestions(): number {
-//     if (!this.test || !this.test[this.currentSectionIndex]) return 0;
-//     return this.test[this.currentSectionIndex].questions.length;
-//   }
-
-//   get answeredCount(): number {
-//     if (!this.answers[this.currentSectionIndex]) return 0;
-//     return this.answers[this.currentSectionIndex].filter(a => a !== null && a !== undefined && a !== '').length;
-//   }
-
-//   get markedCount(): number {
-//     return this.marked.filter(m => m).length;
-//   }
-
-//   // Removed extraQuestions getter as it is not needed in the reverted logic
-
-//   submit() {
-//     clearInterval(this.interval);
-//     // Prepare stats for each section
-//     const sectionStats = this.test.map((section, sIdx) => {
-//       const total = section.questions.length;
-//       let answered = 0, notAnswered = 0, marked = 0, notVisited = 0;
-//       for (let i = 0; i < total; i++) {
-//         const ans = this.answers[sIdx][i];
-//         if (ans && ans !== '') answered++;
-//         else notAnswered++;
-//         if (this.marked[sIdx][i]) marked++;
-//         if (!this.visited[sIdx][i]) notVisited++;
-//       }
-//       return {
-//         section: section.title,
-//         total,
-//         answered,
-//         notAnswered,
-//         marked,
-//         notVisited
-//       };
-//     });
-//     this.router.navigate(['/test-result'], {
-//       state: {
-//         test: this.test,
-//         answers: this.answers,
-//         sectionStats
-//       }
-//     });
-//   }
-// }

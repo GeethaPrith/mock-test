@@ -20,6 +20,8 @@ export class TestInstructionComponent {
   }
 
   startTest() {
+    localStorage.removeItem('liveTestProgress');
+    localStorage.removeItem('reviewModeData');
     if (this.testId) {
       this.router.navigate([`/test-live`, this.testId]);
     }

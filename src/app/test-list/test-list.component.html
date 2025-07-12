@@ -1,18 +1,148 @@
 <div class="container">
   <h2 class="mb-4">Available Mock Tests</h2>
-  <ng-container *ngIf="tests && tests.length; else noTests">
-    <mat-card *ngFor="let test of tests">
-      <mat-card-title>{{ test.title }}</mat-card-title>
-      <mat-card-subtitle>Duration: {{ test.duration / 60 }} mins</mat-card-subtitle>
-      <mat-card-content>
-        <p>{{ test.instructions }}</p>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-flat-button color="primary" (click)="startTest(test.id)">Read Instructions</button>
-      </mat-card-actions>
-    </mat-card>
-  </ng-container>
-  <ng-template #noTests>
+  @if (tests && tests.length) {
+    <div class="test-card-grid">
+      @for (test of tests; let tIdx = $index; track tIdx) {
+        <div class="test-card-single mb-4">
+          <mat-card>
+            <div class="test-card-header-row">
+              <span class="test-card-title">{{ test.title }}</span>
+              <span class="test-card-duration">Duration: {{ test.duration / 60 }} mins</span>
+              <span class="test-card-marks">Marks: {{ test.questions?.length || 0 }}</span>
+              <span class="test-card-actions">
+                <button mat-flat-button color="primary" (click)="startTest(test.id)">Start Now</button>
+              </span>
+            </div>
+            <div class="test-card-content">
+              <p>{{ test.instructions }}</p>
+            </div>
+          </mat-card>
+        </div>
+      }
+      <!-- Example static cards for popular bank exams -->
+      <div class="test-card-single mb-4">
+        <mat-card>
+          <div class="test-card-header-row">
+            <span class="test-card-title">IBPS PO Prelims</span>
+            <span class="test-card-duration">Duration: 60 mins</span>
+            <span class="test-card-marks">Marks: 100</span>
+            <span class="test-card-actions">
+              <button mat-flat-button color="primary">Start Now</button>
+            </span>
+          </div>
+          <div class="test-card-content">
+            <p>Mock test for IBPS Probationary Officer Prelims. Includes Quantitative Aptitude, Reasoning, and English.</p>
+          </div>
+        </mat-card>
+      </div>
+      <div class="test-card-single mb-4">
+        <mat-card>
+          <div class="test-card-header-row">
+            <span class="test-card-title">IBPS Clerk Prelims</span>
+            <span class="test-card-duration">Duration: 60 mins</span>
+            <span class="test-card-marks">Marks: 100</span>
+            <span class="test-card-actions">
+              <button mat-flat-button color="primary">Start Now</button>
+            </span>
+          </div>
+          <div class="test-card-content">
+            <p>Mock test for IBPS Clerk Prelims. Covers Reasoning, Numerical Ability, and English Language.</p>
+          </div>
+        </mat-card>
+      </div>
+      <div class="test-card-single mb-4">
+        <mat-card>
+          <div class="test-card-header-row">
+            <span class="test-card-title">SBI PO Prelims</span>
+            <span class="test-card-duration">Duration: 60 mins</span>
+            <span class="test-card-marks">Marks: 100</span>
+            <span class="test-card-actions">
+              <button mat-flat-button color="primary">Start Now</button>
+            </span>
+          </div>
+          <div class="test-card-content">
+            <p>Mock test for SBI Probationary Officer Prelims. Includes all major sections as per latest pattern.</p>
+          </div>
+        </mat-card>
+      </div>
+      <div class="test-card-single mb-4">
+        <mat-card>
+          <div class="test-card-header-row">
+            <span class="test-card-title">RBI Assistant</span>
+            <span class="test-card-duration">Duration: 60 mins</span>
+            <span class="test-card-marks">Marks: 100</span>
+            <span class="test-card-actions">
+              <button mat-flat-button color="primary">Start Now</button>
+            </span>
+          </div>
+          <div class="test-card-content">
+            <p>Mock test for RBI Assistant. Practice Reasoning, English, and Quantitative Aptitude.</p>
+          </div>
+        </mat-card>
+      </div>
+      <div class="test-card-single mb-4">
+        <mat-card>
+          <div class="test-card-header-row">
+            <span class="test-card-title">IBPS RRB Officer Scale I</span>
+            <span class="test-card-duration">Duration: 45 mins</span>
+            <span class="test-card-marks">Marks: 100</span>
+            <span class="test-card-actions">
+              <button mat-flat-button color="primary">Start Now</button>
+            </span>
+          </div>
+          <div class="test-card-content">
+            <p>Mock test for IBPS RRB Officer Scale I. Includes Reasoning and Quantitative Aptitude.</p>
+          </div>
+        </mat-card>
+      </div>
+      <div class="test-card-single mb-4">
+        <mat-card>
+          <div class="test-card-header-row">
+            <span class="test-card-title">IBPS RRB Office Assistant</span>
+            <span class="test-card-duration">Duration: 45 mins</span>
+            <span class="test-card-marks">Marks: 100</span>
+            <span class="test-card-actions">
+              <button mat-flat-button color="primary">Start Now</button>
+            </span>
+          </div>
+          <div class="test-card-content">
+            <p>Mock test for IBPS RRB Office Assistant. Practice Reasoning and Numerical Ability.</p>
+          </div>
+        </mat-card>
+      </div>
+      <div class="test-card-single mb-4">
+        <mat-card>
+          <div class="test-card-header-row">
+            <span class="test-card-title">SBI Clerk Prelims</span>
+            <span class="test-card-duration">Duration: 60 mins</span>
+            <span class="test-card-marks">Marks: 100</span>
+            <span class="test-card-actions">
+              <button mat-flat-button color="primary">Start Now</button>
+            </span>
+          </div>
+          <div class="test-card-content">
+            <p>Mock test for SBI Clerk Prelims. Covers all sections as per latest exam pattern.</p>
+          </div>
+        </mat-card>
+      </div>
+      <div class="test-card-single mb-4">
+        <mat-card>
+          <div class="test-card-header-row">
+            <span class="test-card-title">RBI Grade B</span>
+            <span class="test-card-duration">Duration: 120 mins</span>
+            <span class="test-card-marks">Marks: 100</span>
+            <span class="test-card-actions">
+              <button mat-flat-button color="primary">Start Now</button>
+            </span>
+          </div>
+          <div class="test-card-content">
+            <p>Mock test for RBI Grade B Officer. Includes General Awareness, English, Quantitative Aptitude, and Reasoning.</p>
+          </div>
+        </mat-card>
+      </div>
+      <!-- Add more as needed -->
+    </div>
+  } @else {
     <p>No tests available.</p>
-  </ng-template>
+  }
 </div>

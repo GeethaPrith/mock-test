@@ -16,7 +16,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let stat of sectionStats">
+        @for (stat of sectionStats; let sIdx = $index; track sIdx) {
+        <tr>
           <td>{{ stat.section }}</td>
           <td>{{ stat.total }}</td>
           <td>{{ stat.answered }}</td>
@@ -24,13 +25,12 @@
           <td>{{ stat.marked }}</td>
           <td>{{ stat.notVisited }}</td>
         </tr>
+        }
       </tbody>
     </table>
     <button mat-raised-button color="primary" (click)="goToReview()">Show Answers</button>
   </mat-card>
-
-
 </div>
-<div *ngIf="!test || !test.length">
+@if (!test || !test.length) {
   <h2>No test result to display.</h2>
-</div>
+}
